@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class BadgesSection extends StatelessWidget {
   const BadgesSection({super.key});
@@ -14,35 +15,31 @@ class BadgesSection extends StatelessWidget {
     const nextBadgeName = 'Энтузиаст';
 
     final progress = currentHours / nextBadgeHours;
+    final theme = ShadTheme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.deepPurple.shade400, Colors.deepPurple.shade600],
+            colors: [
+              theme.colorScheme.primary,
+              theme.colorScheme.primary.withOpacity(0.7),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.deepPurple.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Ваши достижения',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+              style: theme.textTheme.large.copyWith(
                 color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 20),
@@ -65,25 +62,25 @@ class BadgesSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         currentBadge,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                        style: theme.textTheme.h2.copyWith(
                           color: Colors.white,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         currentBadgeDescription,
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: theme.textTheme.small.copyWith(
                           color: Colors.white.withOpacity(0.9),
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ],
                   ),
@@ -100,32 +97,31 @@ class BadgesSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'До следующего бейджа: $nextBadgeName',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.white.withOpacity(0.9),
+                    Flexible(
+                      child: Text(
+                        'До следующего: $nextBadgeName',
+                        style: theme.textTheme.small.copyWith(
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text(
-                      '${currentHours.toStringAsFixed(0)}/${nextBadgeHours.toStringAsFixed(0)} ч',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    const SizedBox(width: 8),
+                    ShadBadge(
+                      backgroundColor: Colors.white.withOpacity(0.2),
+                      child: Text(
+                        '${currentHours.toStringAsFixed(0)}/${nextBadgeHours.toStringAsFixed(0)} ч',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    minHeight: 8,
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
-                  ),
+                const SizedBox(height: 12),
+                ShadProgress(
+                  value: progress,
                 ),
               ],
             ),
@@ -135,4 +131,3 @@ class BadgesSection extends StatelessWidget {
     );
   }
 }
-

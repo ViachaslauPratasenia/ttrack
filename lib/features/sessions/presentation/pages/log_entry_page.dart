@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import '../../domain/entities/session.dart';
+import '../widgets/manual_entry_form.dart';
+
+class LogEntryPage extends StatefulWidget {
+  const LogEntryPage({super.key});
+
+  @override
+  State<LogEntryPage> createState() => _LogEntryPageState();
+}
+
+class _LogEntryPageState extends State<LogEntryPage> {
+  final List<Session> _sessions = [];
+
+  void _handleSessionSaved(Session session) {
+    setState(() {
+      _sessions.add(session);
+    });
+
+    // TODO: Send to backend API
+    debugPrint('Session saved: ${session.type} at ${session.location}');
+    debugPrint('Duration: ${session.duration}');
+    if (session.type == SessionType.practice) {
+      debugPrint('Ratings: T:${session.technicalRating}, '
+          'Tac:${session.tacticalRating}, M:${session.mentalRating}');
+    } else if (session.type == SessionType.match) {
+      debugPrint('Score: ${session.playerScore} - ${session.opponentScore}');
+      debugPrint('Opponent: ${session.opponentName} (${session.opponentLevel})');
+    } else if (session.type == SessionType.gearTest) {
+      debugPrint('KPIs: SGC:${session.sgc}, SPN:${session.spn}, '
+          'PWR:${session.pwr}, STB:${session.stb}, SNS:${session.sns}');
+      debugPrint('GQS Score: ${session.gqsScore}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Добавить тренировку'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: ManualEntryForm(
+        onSessionSaved: _handleSessionSaved,
+      ),
+    );
+  }
+}
+

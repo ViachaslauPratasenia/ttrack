@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class GreetingSection extends StatelessWidget {
   const GreetingSection({super.key});
@@ -23,6 +24,7 @@ class GreetingSection extends StatelessWidget {
   Widget build(BuildContext context) {
     // Mock user name - TODO: Get from auth state
     const userName = 'Вячеслав';
+    final theme = ShadTheme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -31,38 +33,36 @@ class GreetingSection extends StatelessWidget {
         children: [
           Text(
             '${_getGreeting()}, $userName!',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+            style: theme.textTheme.h2,
           ),
           const SizedBox(height: 4),
           Text(
             _getFormattedDate(),
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
-            ),
+            style: theme.textTheme.muted,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.deepPurple.shade50,
+              color: theme.colorScheme.primary.withOpacity(0.1),
+              border: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.2),
+              ),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.deepPurple.shade100),
             ),
             child: Row(
               children: [
-                Icon(Icons.emoji_events, color: Colors.deepPurple.shade700, size: 20),
-                const SizedBox(width: 8),
+                Icon(
+                  LucideIcons.trophy,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Каждая тренировка приближает вас к мастерству!',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.deepPurple.shade700,
+                    style: theme.textTheme.small.copyWith(
+                      color: theme.colorScheme.primary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -75,4 +75,3 @@ class GreetingSection extends StatelessWidget {
     );
   }
 }
-

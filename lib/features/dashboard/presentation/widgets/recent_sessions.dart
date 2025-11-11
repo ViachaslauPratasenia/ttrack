@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class RecentSessions extends StatelessWidget {
   const RecentSessions({super.key});
@@ -9,29 +10,28 @@ class RecentSessions extends StatelessWidget {
     final sessions = [
       {
         'type': 'Practice',
-        'icon': Icons.sports,
-        'color': Colors.blue,
+        'icon': LucideIcons.activity,
         'date': '10 ноября, 18:30',
         'duration': '1.5 ч',
         'location': 'Спорткомплекс "Олимп"',
       },
       {
         'type': 'Match',
-        'icon': Icons.emoji_events,
-        'color': Colors.amber,
+        'icon': LucideIcons.trophy,
         'date': '9 ноября, 20:00',
         'duration': '2.0 ч',
         'location': 'Клуб "Мастер"',
       },
       {
         'type': 'Practice',
-        'icon': Icons.sports,
-        'color': Colors.blue,
+        'icon': LucideIcons.activity,
         'date': '7 ноября, 19:00',
         'duration': '1.0 ч',
         'location': 'Спорткомплекс "Олимп"',
       },
     ];
+
+    final theme = ShadTheme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -41,15 +41,11 @@ class RecentSessions extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Последние тренировки',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: theme.textTheme.h3,
               ),
-              TextButton(
+              ShadButton.ghost(
                 onPressed: () {
                   // TODO: Navigate to History
                 },
@@ -64,7 +60,6 @@ class RecentSessions extends StatelessWidget {
             child: _SessionCard(
               type: session['type'] as String,
               icon: session['icon'] as IconData,
-              color: session['color'] as Color,
               date: session['date'] as String,
               duration: session['duration'] as String,
               location: session['location'] as String,
@@ -79,7 +74,6 @@ class RecentSessions extends StatelessWidget {
 class _SessionCard extends StatelessWidget {
   final String type;
   final IconData icon;
-  final Color color;
   final String date;
   final String duration;
   final String location;
@@ -87,7 +81,6 @@ class _SessionCard extends StatelessWidget {
   const _SessionCard({
     required this.type,
     required this.icon,
-    required this.color,
     required this.date,
     required this.duration,
     required this.location,
@@ -95,33 +88,25 @@ class _SessionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final theme = ShadTheme.of(context);
+
+    return ShadCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: InkWell(
         onTap: () {
           // TODO: Navigate to session detail
         },
+        borderRadius: BorderRadius.circular(12),
         child: Row(
           children: [
             Container(
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
+                color: theme.colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 24),
+              child: Icon(icon, color: theme.colorScheme.primary, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -129,59 +114,43 @@ class _SessionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        type,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                      Flexible(
+                        child: Text(
+                          type,
+                          style: theme.textTheme.p.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          duration,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      ShadBadge.secondary(
+                        child: Text(duration),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
                     date,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                    style: theme.textTheme.muted,
                   ),
                   const SizedBox(height: 2),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.location_on,
+                        LucideIcons.mapPin,
                         size: 14,
-                        color: Colors.grey.shade500,
+                        color: theme.colorScheme.mutedForeground,
                       ),
                       const SizedBox(width: 4),
-                      Expanded(
+                      Flexible(
                         child: Text(
                           location,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade500,
+                          style: theme.textTheme.small.copyWith(
+                            color: theme.colorScheme.mutedForeground,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -192,8 +161,9 @@ class _SessionCard extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.chevron_right,
-              color: Colors.grey.shade400,
+              LucideIcons.chevronRight,
+              color: theme.colorScheme.mutedForeground,
+              size: 20,
             ),
           ],
         ),
@@ -201,4 +171,3 @@ class _SessionCard extends StatelessWidget {
     );
   }
 }
-

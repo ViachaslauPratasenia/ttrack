@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class StatsCards extends StatelessWidget {
   const StatsCards({super.key});
@@ -14,31 +15,27 @@ class StatsCards extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Portrait mode: 1 column, Landscape/tablet: 3 columns
           final isPortrait = constraints.maxWidth < 600;
 
           if (isPortrait) {
             return Column(
               children: [
                 _StatCard(
-                  icon: Icons.access_time,
-                  iconColor: Colors.blue,
+                  icon: LucideIcons.clock,
                   title: 'Часы',
                   value: totalHours.toStringAsFixed(1),
                   subtitle: 'Всего тренировок',
                 ),
                 const SizedBox(height: 12),
                 _StatCard(
-                  icon: Icons.check_circle,
-                  iconColor: Colors.green,
+                  icon: LucideIcons.listChecks,
                   title: 'Сессии',
                   value: totalSessions.toString(),
                   subtitle: 'Записано',
                 ),
                 const SizedBox(height: 12),
                 _StatCard(
-                  icon: Icons.emoji_events,
-                  iconColor: Colors.amber,
+                  icon: LucideIcons.trophy,
                   title: 'Win Rate',
                   value: '${winRate.toStringAsFixed(0)}%',
                   subtitle: 'Процент побед',
@@ -47,11 +44,11 @@ class StatsCards extends StatelessWidget {
             );
           } else {
             return Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
                   child: _StatCard(
-                    icon: Icons.access_time,
-                    iconColor: Colors.blue,
+                    icon: LucideIcons.clock,
                     title: 'Часы',
                     value: totalHours.toStringAsFixed(1),
                     subtitle: 'Всего тренировок',
@@ -60,8 +57,7 @@ class StatsCards extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    icon: Icons.check_circle,
-                    iconColor: Colors.green,
+                    icon: LucideIcons.listChecks,
                     title: 'Сессии',
                     value: totalSessions.toString(),
                     subtitle: 'Записано',
@@ -70,8 +66,7 @@ class StatsCards extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    icon: Icons.emoji_events,
-                    iconColor: Colors.amber,
+                    icon: LucideIcons.trophy,
                     title: 'Win Rate',
                     value: '${winRate.toStringAsFixed(0)}%',
                     subtitle: 'Процент побед',
@@ -88,14 +83,12 @@ class StatsCards extends StatelessWidget {
 
 class _StatCard extends StatelessWidget {
   final IconData icon;
-  final Color iconColor;
   final String title;
   final String value;
   final String subtitle;
 
   const _StatCard({
     required this.icon,
-    required this.iconColor,
     required this.title,
     required this.value,
     required this.subtitle,
@@ -103,39 +96,30 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final theme = ShadTheme.of(context);
+
+    return ShadCard(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: iconColor, size: 20),
+                child: Icon(icon, color: theme.colorScheme.primary, size: 20),
               ),
               const SizedBox(width: 12),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: Text(
+                  title,
+                  style: theme.textTheme.muted,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -143,18 +127,13 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+            style: theme.textTheme.h1,
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade500,
+            style: theme.textTheme.small.copyWith(
+              color: theme.colorScheme.mutedForeground,
             ),
           ),
         ],
@@ -162,4 +141,3 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
-

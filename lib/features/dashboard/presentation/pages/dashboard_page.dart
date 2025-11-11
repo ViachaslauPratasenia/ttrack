@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/stats_cards.dart';
 import '../widgets/badges_section.dart';
@@ -10,48 +11,50 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
           'Spin Track',
           style: TextStyle(
-            color: Colors.black87,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black87),
+          icon: const Icon(LucideIcons.menu),
           onPressed: () {
             // TODO: Open drawer/menu
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black87),
+            icon: const Icon(LucideIcons.search),
             onPressed: () {
               // TODO: Navigate to search
             },
           ),
           IconButton(
-            icon: Icon(
-              Theme.of(context).brightness == Brightness.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-              color: Colors.black87,
-            ),
+            icon: const Icon(LucideIcons.sun),
             onPressed: () {
               // TODO: Toggle theme
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 12.0),
             child: CircleAvatar(
-              backgroundColor: Colors.deepPurple,
-              child: const Icon(Icons.person, color: Colors.white, size: 20),
+              backgroundColor: theme.colorScheme.primary,
+              child: const Text(
+                'ВП',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],
@@ -61,53 +64,41 @@ class DashboardPage extends StatelessWidget {
           // TODO: Refresh data
           await Future.delayed(const Duration(seconds: 1));
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+        child: const SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Greeting Section
-              const GreetingSection(),
-
-              const SizedBox(height: 24),
-
-              // Lifetime Stats Cards
-              const StatsCards(),
-
-              const SizedBox(height: 24),
-
-              // Badges Section
-              const BadgesSection(),
-
-              const SizedBox(height: 24),
-
-              // Performance Trend Chart
-              const PerformanceChart(),
-
-              const SizedBox(height: 24),
-
-              // Recent Sessions
-              const RecentSessions(),
-
-              const SizedBox(height: 80), // Space for FAB
+              GreetingSection(),
+              SizedBox(height: 24),
+              StatsCards(),
+              SizedBox(height: 24),
+              BadgesSection(),
+              SizedBox(height: 24),
+              PerformanceChart(),
+              SizedBox(height: 24),
+              RecentSessions(),
+              SizedBox(height: 100), // Space for FAB
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: ShadButton(
         onPressed: () {
-          // TODO: Navigate to Log Entry
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Переход к логированию тренировки')),
-          );
+          Navigator.pushNamed(context, '/log-entry');
         },
-        backgroundColor: Colors.deepPurple,
-        icon: const Icon(Icons.add),
-        label: const Text('Новая тренировка'),
+        size: ShadButtonSize.lg,
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.plus, size: 20),
+            SizedBox(width: 8),
+            Text('Новая тренировка'),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
-

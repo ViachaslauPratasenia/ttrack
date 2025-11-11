@@ -90,16 +90,19 @@ class _LoginFormState extends State<LoginForm> {
                 border: Border.all(color: Colors.red.shade200),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
                   const SizedBox(width: 8),
-                  Expanded(
+                  Flexible(
                     child: Text(
                       _errorMessage!,
                       style: TextStyle(
                         color: Colors.red.shade700,
                         fontSize: 14,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                 ],
