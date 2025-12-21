@@ -174,7 +174,7 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Session Type Selector with Cards
+          // Session Type Selector
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -182,66 +182,71 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
                 'Тип тренировки',
                 style: ShadTheme.of(context).textTheme.small.copyWith(fontWeight: FontWeight.w500),
               ),
-              const SizedBox(height: 12),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth < 600) {
-                    return Column(
+              const SizedBox(height: 8),
+              ShadSelect<SessionType>(
+                placeholder: const Text('Выберите тип тренировки'),
+                initialValue: _sessionType,
+                options: [
+                  ShadOption(
+                    value: SessionType.practice,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildTypeCard(
-                          type: SessionType.practice,
-                          icon: LucideIcons.activity,
-                          label: 'Тренировка',
-                        ),
-                        const SizedBox(height: 8),
-                        _buildTypeCard(
-                          type: SessionType.match,
-                          icon: LucideIcons.trophy,
-                          label: 'Матч',
-                        ),
-                        const SizedBox(height: 8),
-                        _buildTypeCard(
-                          type: SessionType.gearTest,
-                          icon: LucideIcons.beaker,
-                          label: 'Тест',
-                        ),
+                        Icon(LucideIcons.activity, size: 16),
+                        const SizedBox(width: 8),
+                        const Text('Тренировка'),
                       ],
-                    );
-                  }
+                    ),
+                  ),
+                  ShadOption(
+                    value: SessionType.match,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(LucideIcons.trophy, size: 16),
+                        const SizedBox(width: 8),
+                        const Text('Матч'),
+                      ],
+                    ),
+                  ),
+                  ShadOption(
+                    value: SessionType.gearTest,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(LucideIcons.beaker, size: 16),
+                        const SizedBox(width: 8),
+                        const Text('Тест экипировки'),
+                      ],
+                    ),
+                  ),
+                ],
+                selectedOptionBuilder: (context, value) {
+                  final Map<SessionType, MapEntry<IconData, String>> typeInfo = {
+                    SessionType.practice: const MapEntry(LucideIcons.activity, 'Тренировка'),
+                    SessionType.match: const MapEntry(LucideIcons.trophy, 'Матч'),
+                    SessionType.gearTest: const MapEntry(LucideIcons.beaker, 'Тест экипировки'),
+                  };
+                  final info = typeInfo[value]!;
                   return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: _buildTypeCard(
-                          type: SessionType.practice,
-                          icon: LucideIcons.activity,
-                          label: 'Тренировка',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildTypeCard(
-                          type: SessionType.match,
-                          icon: LucideIcons.trophy,
-                          label: 'Матч',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildTypeCard(
-                          type: SessionType.gearTest,
-                          icon: LucideIcons.beaker,
-                          label: 'Тест',
-                        ),
-                      ),
+                      Icon(info.key, size: 16),
+                      const SizedBox(width: 8),
+                      Text(info.value),
                     ],
                   );
+                },
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => _sessionType = value);
+                  }
                 },
               ),
             ],
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Location
           ShadInputFormField(
@@ -404,56 +409,6 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTypeCard({
-    required SessionType type,
-    required IconData icon,
-    required String label,
-  }) {
-    final isSelected = _sessionType == type;
-    final theme = ShadTheme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isSelected ? theme.colorScheme.primary.withOpacity(0.1) : Colors.transparent,
-        border: Border.all(
-          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.border,
-          width: isSelected ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: InkWell(
-        onTap: () => setState(() => _sessionType = type),
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 32,
-                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.mutedForeground,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? theme.colorScheme.primary : theme.colorScheme.foreground,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

@@ -1,0 +1,28 @@
+name: Flutter Web
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build Web
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.35.3'
+          channel: 'stable'
+      - run: flutter --version
+      - run: flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter pub run build_runner build -d
+      - run: flutter build web --release
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          cname: ttrack.pratasenia.dev

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import '../widgets/greeting_section.dart';
+import '../widgets/app_sidebar.dart';
 import '../widgets/stats_cards.dart';
 import '../widgets/badges_section.dart';
 import '../widgets/performance_chart.dart';
+import '../widgets/gear_performance_index.dart';
 import '../widgets/recent_sessions.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -15,90 +16,135 @@ class DashboardPage extends StatelessWidget {
     
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Spin Track',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.menu),
-          onPressed: () {
-            // TODO: Open drawer/menu
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(LucideIcons.search),
-            onPressed: () {
-              // TODO: Navigate to search
-            },
-          ),
-          IconButton(
-            icon: const Icon(LucideIcons.sun),
-            onPressed: () {
-              // TODO: Toggle theme
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: CircleAvatar(
-              backgroundColor: theme.colorScheme.primary,
-              child: const Text(
-                'ВП',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+      body: Row(
+        children: [
+          // Sidebar
+          const AppSidebar(currentRoute: '/dashboard'),
+          
+          // Main content
+          Expanded(
+            child: Column(
+              children: [
+                // Top bar
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.card,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.colorScheme.border,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Dashboard',
+                        style: theme.textTheme.h2.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(LucideIcons.search, size: 20),
+                            onPressed: () {
+                              // TODO: Search
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(LucideIcons.sun, size: 20),
+                            onPressed: () {
+                              // TODO: Toggle theme
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          CircleAvatar(
+                            backgroundColor: theme.colorScheme.primary,
+                            radius: 18,
+                            child: const Text(
+                              'V',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Viachaslau',
+                                style: theme.textTheme.small.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                'Logout',
+                                style: theme.textTheme.small.copyWith(
+                                  color: theme.colorScheme.mutedForeground,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                
+                // Scrollable content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Stats cards
+                        const StatsCards(),
+                        const SizedBox(height: 24),
+                        
+                        // Badges and Performance row
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Badges section (left side)
+                            const Expanded(
+                              flex: 1,
+                              child: BadgesSection(),
+                            ),
+                            const SizedBox(width: 24),
+                            
+                            // Performance chart (right side)
+                            const Expanded(
+                              flex: 1,
+                              child: PerformanceChart(),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // GPI
+                        const GearPerformanceIndex(),
+                        const SizedBox(height: 24),
+                        
+                        // Recent sessions
+                        const RecentSessions(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          // TODO: Refresh data
-          await Future.delayed(const Duration(seconds: 1));
-        },
-        child: const SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GreetingSection(),
-              SizedBox(height: 24),
-              StatsCards(),
-              SizedBox(height: 24),
-              BadgesSection(),
-              SizedBox(height: 24),
-              PerformanceChart(),
-              SizedBox(height: 24),
-              RecentSessions(),
-              SizedBox(height: 100), // Space for FAB
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: ShadButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/log-entry');
-        },
-        size: ShadButtonSize.lg,
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(LucideIcons.plus, size: 20),
-            SizedBox(width: 8),
-            Text('Новая тренировка'),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

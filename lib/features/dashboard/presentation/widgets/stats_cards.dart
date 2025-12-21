@@ -7,91 +7,50 @@ class StatsCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Mock data - TODO: Get from state management
-    const totalHours = 42.5;
-    const totalSessions = 28;
-    const winRate = 65.0;
+    const totalHours = 2.0;
+    const totalMinutes = 0;
+    const totalSessions = 1;
+    const wins = 0;
+    const matches = 1;
+    const winRate = 0.0;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isPortrait = constraints.maxWidth < 600;
-
-          if (isPortrait) {
-            return Column(
-              children: [
-                _StatCard(
-                  icon: LucideIcons.clock,
-                  title: 'Часы',
-                  value: totalHours.toStringAsFixed(1),
-                  subtitle: 'Всего тренировок',
-                ),
-                const SizedBox(height: 12),
-                _StatCard(
-                  icon: LucideIcons.listChecks,
-                  title: 'Сессии',
-                  value: totalSessions.toString(),
-                  subtitle: 'Записано',
-                ),
-                const SizedBox(height: 12),
-                _StatCard(
-                  icon: LucideIcons.trophy,
-                  title: 'Win Rate',
-                  value: '${winRate.toStringAsFixed(0)}%',
-                  subtitle: 'Процент побед',
-                ),
-              ],
-            );
-          } else {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    icon: LucideIcons.clock,
-                    title: 'Часы',
-                    value: totalHours.toStringAsFixed(1),
-                    subtitle: 'Всего тренировок',
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _StatCard(
-                    icon: LucideIcons.listChecks,
-                    title: 'Сессии',
-                    value: totalSessions.toString(),
-                    subtitle: 'Записано',
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _StatCard(
-                    icon: LucideIcons.trophy,
-                    title: 'Win Rate',
-                    value: '${winRate.toStringAsFixed(0)}%',
-                    subtitle: 'Процент побед',
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+    return Row(
+      children: [
+        Expanded(
+          child: _StatCard(
+            title: 'Lifetime Hours',
+            value: '${totalHours.toInt()}h ${totalMinutes}m',
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _StatCard(
+            title: 'Total Sessions',
+            value: totalSessions.toString(),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _StatCard(
+            title: 'Win Rate',
+            value: '${winRate.toStringAsFixed(1)}%',
+            subtitle: '$wins Wins / $matches Matches',
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _StatCard extends StatelessWidget {
-  final IconData icon;
   final String title;
   final String value;
-  final String subtitle;
+  final String? subtitle;
 
   const _StatCard({
-    required this.icon,
     required this.title,
     required this.value,
-    required this.subtitle,
+    this.subtitle,
   });
 
   @override
@@ -103,39 +62,28 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: theme.colorScheme.primary, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: Text(
-                  title,
-                  style: theme.textTheme.muted,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
           Text(
-            value,
-            style: theme.textTheme.h1,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
+            title,
             style: theme.textTheme.small.copyWith(
               color: theme.colorScheme.mutedForeground,
             ),
           ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: theme.textTheme.h1.copyWith(
+              fontSize: 32,
+            ),
+          ),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              subtitle!,
+              style: theme.textTheme.small.copyWith(
+                color: theme.colorScheme.mutedForeground,
+              ),
+            ),
+          ],
         ],
       ),
     );

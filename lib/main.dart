@@ -3,6 +3,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/sessions/presentation/pages/log_entry_page.dart';
+import 'features/sessions/presentation/pages/sessions_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,10 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShadApp.custom(
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       theme: ShadThemeData(
-        brightness: Brightness.light,
-        colorScheme: const ShadSlateColorScheme.light(),
+        brightness: Brightness.dark,
+        colorScheme: const ShadSlateColorScheme.dark(),
       ),
       appBuilder: (context) {
         return MaterialApp(
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
             '/login': (context) => const LoginPage(),
             '/dashboard': (context) => const DashboardPage(),
             '/log-entry': (context) => const LogEntryPage(),
+            '/sessions-list': (context) => const SessionsListPage(),
           },
         );
       },
