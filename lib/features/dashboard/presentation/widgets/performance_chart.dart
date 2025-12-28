@@ -8,6 +8,9 @@ class PerformanceChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+    final isTablet = screenWidth >= 768 && screenWidth < 1024;
 
     // Mock data for chart - TODO: Get from state management
     // Set chartData to null to see empty state
@@ -35,6 +38,7 @@ class PerformanceChart extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: isMobile || isTablet ? MainAxisSize.min : MainAxisSize.max,
           children: [
             Row(
               children: [
@@ -79,11 +83,19 @@ class PerformanceChart extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Chart area
-            Expanded(
-              child: chartData != null && chartData.isNotEmpty
-                  ? _PerformanceChartWidget(data: chartData, theme: theme)
-                  : _EmptyChartState(theme: theme),
-            ),
+            if (isMobile || isTablet)
+              SizedBox(
+                height: 300,
+                child: chartData != null && chartData.isNotEmpty
+                    ? _PerformanceChartWidget(data: chartData, theme: theme)
+                    : _EmptyChartState(theme: theme),
+              )
+            else
+              Expanded(
+                child: chartData != null && chartData.isNotEmpty
+                    ? _PerformanceChartWidget(data: chartData, theme: theme)
+                    : _EmptyChartState(theme: theme),
+              ),
           ],
         ),
       ),

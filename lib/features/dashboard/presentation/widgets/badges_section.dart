@@ -19,6 +19,7 @@ class BadgesSection extends StatelessWidget {
     // For mobile, show in column, for desktop in row
     if (isMobile) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildCurrentBadge(theme),
           const SizedBox(height: 16),
@@ -60,6 +61,7 @@ class BadgesSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -88,47 +90,45 @@ class BadgesSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Expanded(
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppColors.info.withOpacity(0.2), AppColors.info.withOpacity(0.05)],
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.info.withOpacity(0.2), AppColors.info.withOpacity(0.05)],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(LucideIcons.star, size: 24, color: AppColors.info),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Starter',
+                        style: theme.textTheme.h4.copyWith(
+                          color: AppColors.info,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          height: 1,
+                        ),
                       ),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(LucideIcons.star, size: 24, color: AppColors.info),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Starter',
-                          style: theme.textTheme.h4.copyWith(
-                            color: AppColors.info,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            height: 1,
-                          ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '100+ hours logged',
+                        style: theme.textTheme.small.copyWith(
+                          color: theme.colorScheme.mutedForeground.withOpacity(0.7),
+                          fontSize: 11,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '100+ hours logged',
-                          style: theme.textTheme.small.copyWith(
-                            color: theme.colorScheme.mutedForeground.withOpacity(0.7),
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -163,6 +163,7 @@ class BadgesSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -231,7 +232,7 @@ class BadgesSection extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(height: 12),
 
             // Progress section
             Row(

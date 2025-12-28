@@ -176,25 +176,25 @@ class _DashboardPageState extends State<DashboardPage> {
                               const PerformanceChart(),
                             ],
                           )
-                        else
-                          SizedBox(
-                            height: 350,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: EquipmentStatusCard(
-                                    paddleSetup: _currentPaddleSetup,
-                                    onAddEquipment: _showAddEquipmentDialog,
-                                    onEditEquipment: _showAddEquipmentDialog,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                const Expanded(flex: 1, child: PerformanceChart()),
-                              ],
-                            ),
-                          ),
+                         else
+                           SizedBox(
+                             height: 380,
+                             child: Row(
+                               crossAxisAlignment: CrossAxisAlignment.stretch,
+                               children: [
+                                 Expanded(
+                                   flex: 1,
+                                   child: EquipmentStatusCard(
+                                     paddleSetup: _currentPaddleSetup,
+                                     onAddEquipment: _showAddEquipmentDialog,
+                                     onEditEquipment: _showAddEquipmentDialog,
+                                   ),
+                                 ),
+                                 const SizedBox(width: 20),
+                                 const Expanded(flex: 1, child: PerformanceChart()),
+                               ],
+                             ),
+                           ),
                         const SizedBox(height: 24),
 
                         // GPI
