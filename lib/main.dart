@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/sessions/presentation/pages/log_entry_page.dart';
@@ -16,15 +17,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShadApp.custom(
       themeMode: ThemeMode.dark,
-      theme: ShadThemeData(
-        brightness: Brightness.dark,
-        colorScheme: const ShadSlateColorScheme.dark(),
-      ),
+      theme: AppTheme.darkTheme(),
       appBuilder: (context) {
         return MaterialApp(
           title: 'Spin Track',
           debugShowCheckedModeBanner: false,
-          theme: Theme.of(context),
+          theme: AppTheme.materialDarkTheme(),
           builder: (context, child) {
             return ShadAppBuilder(child: child!);
           },

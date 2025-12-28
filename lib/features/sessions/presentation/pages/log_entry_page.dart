@@ -35,6 +35,9 @@ class _LogEntryPageState extends State<LogEntryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -43,8 +46,19 @@ class _LogEntryPageState extends State<LogEntryPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: ManualEntryForm(
-        onSessionSaved: _handleSessionSaved,
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: isMobile ? double.infinity : 800,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24,
+            vertical: 16,
+          ),
+          child: ManualEntryForm(
+            onSessionSaved: _handleSessionSaved,
+          ),
+        ),
       ),
     );
   }

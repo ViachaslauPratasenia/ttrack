@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -51,9 +52,9 @@ class _LoginFormState extends State<LoginForm> {
       // Success - mock
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Успешный вход!'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: const Text('✅ Успешный вход!'),
+            backgroundColor: AppColors.success,
           ),
         );
 
@@ -85,20 +86,20 @@ class _LoginFormState extends State<LoginForm> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
+                color: AppColors.error.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red.shade200),
+                border: Border.all(color: AppColors.error.withOpacity(0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+                  Icon(Icons.error_outline, color: AppColors.error, size: 20),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
                       _errorMessage!,
                       style: TextStyle(
-                        color: Colors.red.shade700,
+                        color: AppColors.error,
                         fontSize: 14,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -201,12 +202,12 @@ class _LoginFormState extends State<LoginForm> {
                     _rememberMe = value ?? false;
                   });
                 },
-                activeColor: Colors.deepPurple,
+                activeColor: AppColors.primary,
               ),
-              const Text(
+              Text(
                 'Помнить меня',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: AppColors.textPrimary,
                   fontSize: 14,
                 ),
               ),
@@ -219,22 +220,22 @@ class _LoginFormState extends State<LoginForm> {
           ElevatedButton(
             onPressed: _isLoading ? null : _handleLogin,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.textPrimary,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               elevation: 0,
-              disabledBackgroundColor: Colors.grey.shade300,
+              disabledBackgroundColor: AppColors.textDisabled,
             ),
             child: _isLoading
-                ? const SizedBox(
+                ? SizedBox(
                     height: 20,
                     width: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.textPrimary),
                     ),
                   )
                 : const Text(
@@ -254,7 +255,7 @@ class _LoginFormState extends State<LoginForm> {
               'Для тестирования: test@test.com / password',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade600,
+                color: AppColors.textTertiary,
                 fontStyle: FontStyle.italic,
               ),
             ),

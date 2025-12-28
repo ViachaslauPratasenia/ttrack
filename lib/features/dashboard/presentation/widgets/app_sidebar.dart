@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AppSidebar extends StatelessWidget {
   final String currentRoute;
@@ -16,41 +17,91 @@ class AppSidebar extends StatelessWidget {
     return Container(
       width: 250,
       decoration: BoxDecoration(
-        color: theme.colorScheme.card,
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.card,
+            theme.colorScheme.background,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         border: Border(
           right: BorderSide(
-            color: theme.colorScheme.border,
+            color: theme.colorScheme.border.withOpacity(0.5),
             width: 1,
           ),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 10,
+            offset: const Offset(2, 0),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Logo/Brand
-          Padding(
+          // Logo/Brand with gradient
+          Container(
             padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.1),
+                  Colors.transparent,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             child: Row(
               children: [
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8),
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withOpacity(0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.disc,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  'Spin Track',
-                  style: theme.textTheme.h4.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Spin Track',
+                      style: theme.textTheme.h4.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Table Tennis Tracker',
+                      style: theme.textTheme.small.copyWith(
+                        color: theme.colorScheme.mutedForeground,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -168,39 +219,73 @@ class _NavItem extends StatelessWidget {
     final theme = ShadTheme.of(context);
     
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: isActive 
-                  ? theme.colorScheme.primary.withOpacity(0.1)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
+              gradient: isActive
+                  ? LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.15),
+                        theme.colorScheme.primary.withOpacity(0.08),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    )
+                  : null,
+              borderRadius: BorderRadius.circular(10),
+              border: isActive
+                  ? Border.all(
+                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      width: 1,
+                    )
+                  : null,
             ),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: isActive 
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.mutedForeground,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  label,
-                  style: theme.textTheme.p.copyWith(
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: isActive
+                      ? BoxDecoration(
+                          color: theme.colorScheme.primary.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        )
+                      : null,
+                  child: Icon(
+                    icon,
+                    size: 18,
                     color: isActive 
                         ? theme.colorScheme.primary
-                        : theme.colorScheme.foreground,
-                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                        : theme.colorScheme.mutedForeground,
                   ),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: theme.textTheme.p.copyWith(
+                      color: isActive 
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.foreground,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                if (isActive)
+                  Container(
+                    width: 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
               ],
             ),
           ),

@@ -169,6 +169,8 @@ class _SessionsListPageState extends State<SessionsListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -201,10 +203,15 @@ class _SessionsListPageState extends State<SessionsListPage> {
                 ],
               ),
             )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _sessions.length,
-              itemBuilder: (context, index) {
+          : Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: isMobile ? double.infinity : 900,
+                ),
+                child: ListView.builder(
+                  padding: EdgeInsets.all(isMobile ? 16 : 24),
+                  itemCount: _sessions.length,
+                  itemBuilder: (context, index) {
                 final session = _sessions[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -352,6 +359,8 @@ class _SessionsListPageState extends State<SessionsListPage> {
                   ),
                 );
               },
+            ),
+              ),
             ),
     );
   }

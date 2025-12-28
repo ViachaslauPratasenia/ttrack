@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../widgets/login_form.dart';
 
 class LoginPage extends StatelessWidget {
@@ -7,7 +8,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -50,34 +51,34 @@ class LoginPage extends StatelessWidget {
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-            color: Colors.deepPurple,
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.sports_tennis,
             size: 50,
-            color: Colors.white,
+            color: AppColors.textPrimary,
           ),
         ),
         const SizedBox(height: 24),
 
         // App Name
-        const Text(
+        Text(
           'Spin Track',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: AppColors.textPrimary,
           ),
         ),
         const SizedBox(height: 8),
 
         // Welcome Text
-        const Text(
+        Text(
           'Добро пожаловать',
           style: TextStyle(
             fontSize: 18,
-            color: Colors.black54,
+            color: AppColors.textSecondary,
           ),
         ),
       ],
@@ -96,10 +97,10 @@ class LoginPage extends StatelessWidget {
             ),
           );
         },
-        child: const Text(
+        child: Text(
           'Забыли пароль?',
           style: TextStyle(
-            color: Colors.deepPurple,
+            color: AppColors.primary,
             fontSize: 14,
           ),
         ),
@@ -111,10 +112,10 @@ class LoginPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           'Нет аккаунта? ',
           style: TextStyle(
-            color: Colors.black54,
+            color: AppColors.textSecondary,
             fontSize: 14,
           ),
         ),
@@ -127,10 +128,10 @@ class LoginPage extends StatelessWidget {
               ),
             );
           },
-          child: const Text(
+          child: Text(
             'Создайте',
             style: TextStyle(
-              color: Colors.deepPurple,
+              color: AppColors.primary,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
