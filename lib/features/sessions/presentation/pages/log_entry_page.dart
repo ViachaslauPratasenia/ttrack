@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../domain/entities/session.dart';
 import '../widgets/manual_entry_form.dart';
 
@@ -36,7 +37,7 @@ class _LogEntryPageState extends State<LogEntryPage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
     
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../../../core/utils/dialog_utils.dart';
 import '../../../sessions/domain/entities/session.dart';
 import '../../../sessions/presentation/widgets/session_detail_dialog.dart';
@@ -133,7 +134,7 @@ class RecentSessions extends StatelessWidget {
             // Responsive layout
             LayoutBuilder(
               builder: (context, constraints) {
-                if (constraints.maxWidth < 700) {
+                if (constraints.maxWidth < UIConstants.breakpointMedium) {
                   // Card layout for small screens
                   return Column(
                     children: sessions

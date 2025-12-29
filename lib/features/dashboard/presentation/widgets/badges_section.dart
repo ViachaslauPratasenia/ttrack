@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 
 class BadgesSection extends StatelessWidget {
   const BadgesSection({super.key});
@@ -13,7 +14,7 @@ class BadgesSection extends StatelessWidget {
 
     final progress = currentHours / nextBadgeHours;
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
 
     // For mobile, show in column, for desktop in row
     if (isMobile) {
@@ -54,7 +55,7 @@ class BadgesSection extends StatelessWidget {
             icon: LucideIcons.award,
             accentColor: AppColors.info,
             isCurrentBadge: true,
-            height: 160,
+            height: UIConstants.badgeCardHeight,
           ),
         ),
         const SizedBox(width: 20),
@@ -69,7 +70,7 @@ class BadgesSection extends StatelessWidget {
             currentHours: currentHours,
             targetHours: nextBadgeHours,
             progress: progress,
-            height: 160,
+            height: UIConstants.badgeCardHeight,
           ),
         ),
       ],

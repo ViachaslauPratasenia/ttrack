@@ -50,6 +50,8 @@ class AppColors {
   static const Color teal = Color(0xFF14B8A6); // Teal для GPI
   static const Color tealLight = Color(0xFF2DD4BF);
   static const Color tealDark = Color(0xFF0D9488);
+  
+  static const Color gearAccent = Color(0xFF4ECDC4); // Бирюзовый для карточек экипировки
 
   static const Color olive = Color(0xFF84CC16); // Lime для средних показателей
   static const Color orange = Color(0xFFFF9800); // Оранжевый для износа

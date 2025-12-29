@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../domain/entities/session.dart';
 
 class SessionDetailDialog extends StatelessWidget {
@@ -77,8 +78,8 @@ class SessionDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
-    final isSmallScreen = screenWidth < 600;
+    final isMobile = screenWidth.isMobile;
+    final isSmallScreen = screenWidth.isSmallScreen;
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -427,8 +428,8 @@ class SessionDetailDialog extends StatelessWidget {
       title: const SizedBox.shrink(),
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: 600,
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
+          maxWidth: UIConstants.dialogWidthDesktop,
+          maxHeight: MediaQuery.of(context).size.height * UIConstants.dialogMaxHeightMultiplier,
         ),
         decoration: BoxDecoration(
           color: AppColors.dialogBackground,

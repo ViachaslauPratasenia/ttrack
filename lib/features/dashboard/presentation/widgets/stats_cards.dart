@@ -17,7 +17,7 @@ class StatsCards extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isSmallScreen = constraints.maxWidth < 800;
+        final isSmallScreen = constraints.maxWidth < 800; // Custom breakpoint for stat cards layout
 
         if (isSmallScreen) {
           // Stack cards vertically on small screens

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../domain/entities/equipment.dart';
 
 class EquipmentStatusCard extends StatelessWidget {
@@ -21,7 +22,7 @@ class EquipmentStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
 
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 20),

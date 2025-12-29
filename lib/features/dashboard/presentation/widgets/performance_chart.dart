@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 
 class PerformanceChart extends StatelessWidget {
   const PerformanceChart({super.key});
@@ -9,8 +10,8 @@ class PerformanceChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
-    final isTablet = screenWidth >= 768 && screenWidth < 1024;
+    final isMobile = screenWidth.isMobile;
+    final isTablet = screenWidth.isTablet;
 
     // Mock data for chart - TODO: Get from state management
     // Set chartData to null to see empty state

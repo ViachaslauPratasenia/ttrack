@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/ui_constants.dart';
 
 /// Utility class for showing dialogs that adapt to screen size
 class DialogUtils {
@@ -9,7 +10,7 @@ class DialogUtils {
     bool barrierDismissible = true,
   }) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
 
     if (isMobile) {
       // Full-screen modal for mobile

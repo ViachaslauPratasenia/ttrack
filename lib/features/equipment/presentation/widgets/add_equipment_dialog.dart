@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../domain/entities/equipment.dart';
 
 class AddEquipmentDialog extends StatefulWidget {
   final PaddleSetup? paddleSetup;
   final Function(PaddleSetup) onSave;
 
-  const AddEquipmentDialog({
-    super.key,
-    this.paddleSetup,
-    required this.onSave,
-  });
+  const AddEquipmentDialog({super.key, this.paddleSetup, required this.onSave});
 
   @override
   State<AddEquipmentDialog> createState() => _AddEquipmentDialogState();
@@ -20,20 +17,20 @@ class AddEquipmentDialog extends StatefulWidget {
 
 class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Paddle Setup
   late TextEditingController _setupNameController;
-  
+
   // Blade
   late TextEditingController _bladeNameController;
   EquipmentCondition _bladeCondition = EquipmentCondition.brandNew;
-  
+
   // Forehand Rubber
   late TextEditingController _fhRubberNameController;
   EquipmentCondition _fhRubberCondition = EquipmentCondition.brandNew;
   late TextEditingController _fhLifespanController;
   late TextEditingController _fhUsedHoursController;
-  
+
   // Backhand Rubber
   late TextEditingController _bhRubberNameController;
   EquipmentCondition _bhRubberCondition = EquipmentCondition.brandNew;
@@ -43,15 +40,15 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     final setup = widget.paddleSetup;
-    
+
     _setupNameController = TextEditingController(text: setup?.name ?? '');
-    
+
     // Blade
     _bladeNameController = TextEditingController(text: setup?.blade.name ?? '');
     _bladeCondition = setup?.blade.condition ?? EquipmentCondition.brandNew;
-    
+
     // Forehand
     _fhRubberNameController = TextEditingController(text: setup?.forehandRubber.name ?? '');
     _fhRubberCondition = setup?.forehandRubber.initialCondition ?? EquipmentCondition.brandNew;
@@ -61,7 +58,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     _fhUsedHoursController = TextEditingController(
       text: setup?.forehandRubber.usedHours.toString() ?? '0',
     );
-    
+
     // Backhand
     _bhRubberNameController = TextEditingController(text: setup?.backhandRubber.name ?? '');
     _bhRubberCondition = setup?.backhandRubber.initialCondition ?? EquipmentCondition.brandNew;
@@ -136,10 +133,10 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
   void _getAILifespanSuggestion(TextEditingController controller, String rubberName) {
     // TODO: Replace with actual AI API call
     // For now, return test data based on rubber type
-    
+
     final name = rubberName.toLowerCase();
     double suggestedLifespan = 200; // default
-    
+
     if (name.contains('tenergy') || name.contains('dignics')) {
       suggestedLifespan = 150; // Premium rubbers wear faster
     } else if (name.contains('evo') || name.contains('rasant')) {
@@ -147,11 +144,11 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     } else if (name.contains('mark v') || name.contains('sriver')) {
       suggestedLifespan = 250; // Classic rubbers last longer
     }
-    
+
     setState(() {
       controller.text = suggestedLifespan.toString();
     });
-    
+
     // Show a snackbar with info
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -165,7 +162,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -175,9 +172,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: theme.colorScheme.muted.withOpacity(0.05),
-            border: Border(
-              bottom: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
-            ),
+            border: Border(bottom: BorderSide(color: theme.colorScheme.border.withOpacity(0.5))),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,12 +186,9 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    widget.paddleSetup == null 
-                      ? 'Добавить ракетку' 
-                      : 'Редактировать ракетку',
+                    widget.paddleSetup == null ? 'Добавить ракетку' : 'Редактировать ракетку',
                     style: theme.textTheme.h3.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: isMobile ? 18 : 20,
                     ),
                   ),
                 ],
@@ -279,9 +271,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: theme.colorScheme.muted.withOpacity(0.05),
-            border: Border(
-              top: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
-            ),
+            border: Border(top: BorderSide(color: theme.colorScheme.border.withOpacity(0.5))),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -326,22 +316,16 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     return Dialog(
       backgroundColor: AppColors.background.withOpacity(0.8),
       child: Container(
-        width: 600,
+        width: UIConstants.dialogWidthDesktop,
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
+          maxHeight: MediaQuery.of(context).size.height * UIConstants.dialogMaxHeightFullMultiplier,
         ),
         decoration: BoxDecoration(
           color: AppColors.dialogBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: theme.colorScheme.border.withOpacity(0.5),
-          ),
+          border: Border.all(color: theme.colorScheme.border.withOpacity(0.5)),
           boxShadow: [
-            BoxShadow(
-              color: AppColors.shadow,
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
+            BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: const Offset(0, 4)),
           ],
         ),
         clipBehavior: Clip.antiAlias,
@@ -386,10 +370,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
       children: [
         Text(
           label + (required ? ' *' : ''),
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 6),
         TextFormField(
@@ -398,19 +379,16 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
           decoration: InputDecoration(
             hintText: hint,
             border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           ),
           validator: required
-            ? (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Поле обязательно для заполнения';
+              ? (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Поле обязательно для заполнения';
+                  }
+                  return null;
                 }
-                return null;
-              }
-            : null,
+              : null,
         ),
       ],
     );
@@ -424,28 +402,16 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 6),
         DropdownButtonFormField<EquipmentCondition>(
           value: value,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           ),
           items: EquipmentCondition.values.map((condition) {
-            return DropdownMenuItem(
-              value: condition,
-              child: Text(condition.displayName),
-            );
+            return DropdownMenuItem(value: condition, child: Text(condition.displayName));
           }).toList(),
           onChanged: (newValue) {
             if (newValue != null) {
@@ -473,11 +439,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
           required: true,
         ),
         const SizedBox(height: 12),
-        _buildConditionSelector(
-          'Состояние при установке',
-          condition,
-          onConditionChanged,
-        ),
+        _buildConditionSelector('Состояние при установке', condition, onConditionChanged),
         const SizedBox(height: 12),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -497,10 +459,8 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
               child: SizedBox(
                 height: 40,
                 child: ShadButton.outline(
-                  onPressed: () => _getAILifespanSuggestion(
-                    lifespanController, 
-                    nameController.text,
-                  ),
+                  onPressed: () =>
+                      _getAILifespanSuggestion(lifespanController, nameController.text),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
@@ -525,4 +485,3 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     );
   }
 }
-

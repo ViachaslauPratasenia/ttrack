@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../../../core/utils/dialog_utils.dart';
 import '../widgets/app_sidebar.dart';
 import '../widgets/stats_cards.dart';
@@ -47,8 +48,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
-    final isTablet = screenWidth >= 768 && screenWidth < 1024;
+    final isMobile = screenWidth.isMobile;
+    final isTablet = screenWidth.isTablet;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -64,7 +65,10 @@ class _DashboardPageState extends State<DashboardPage> {
               children: [
                 // Top bar
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 16 : 24,
+                    vertical: 16,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.card,
                     border: Border(bottom: BorderSide(color: theme.colorScheme.border, width: 1)),
@@ -88,7 +92,6 @@ class _DashboardPageState extends State<DashboardPage> {
                             'Dashboard',
                             style: theme.textTheme.h2.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: isMobile ? 20 : 24,
                             ),
                           ),
                         ],
@@ -137,7 +140,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                   'Logout',
                                   style: theme.textTheme.small.copyWith(
                                     color: theme.colorScheme.mutedForeground,
-                                    fontSize: 10,
                                   ),
                                 ),
                               ],
@@ -152,7 +154,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 // Scrollable content
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.all(isMobile ? 16 : 24),
+                    padding: EdgeInsets.all(
+                      isMobile ? 16 : 24,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -177,25 +181,25 @@ class _DashboardPageState extends State<DashboardPage> {
                               const PerformanceChart(),
                             ],
                           )
-                         else
-                           SizedBox(
-                             height: 380,
-                             child: Row(
-                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                               children: [
-                                 Expanded(
-                                   flex: 1,
-                                   child: EquipmentStatusCard(
-                                     paddleSetup: _currentPaddleSetup,
-                                     onAddEquipment: _showAddEquipmentDialog,
-                                     onEditEquipment: _showAddEquipmentDialog,
-                                   ),
-                                 ),
-                                 const SizedBox(width: 20),
-                                 const Expanded(flex: 1, child: PerformanceChart()),
-                               ],
-                             ),
-                           ),
+                        else
+                          SizedBox(
+                            height: UIConstants.equipmentCardHeight,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: EquipmentStatusCard(
+                                    paddleSetup: _currentPaddleSetup,
+                                    onAddEquipment: _showAddEquipmentDialog,
+                                    onEditEquipment: _showAddEquipmentDialog,
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                const Expanded(flex: 1, child: PerformanceChart()),
+                              ],
+                            ),
+                          ),
                         const SizedBox(height: 24),
 
                         // GPI
@@ -206,7 +210,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         const RecentSessions(),
 
                         // Bottom padding for mobile
-                        if (isMobile) const SizedBox(height: 40),
+                        if (isMobile) const SizedBox(height: 32 + 8),
                       ],
                     ),
                   ),

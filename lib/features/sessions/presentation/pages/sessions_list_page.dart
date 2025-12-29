@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../../../core/utils/dialog_utils.dart';
 import '../../domain/entities/session.dart';
 import '../widgets/session_detail_dialog.dart';
@@ -171,7 +172,7 @@ class _SessionsListPageState extends State<SessionsListPage> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 768;
+    final isMobile = screenWidth.isMobile;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -207,10 +208,12 @@ class _SessionsListPageState extends State<SessionsListPage> {
           : Center(
               child: Container(
                 constraints: BoxConstraints(
-                  maxWidth: isMobile ? double.infinity : 900,
+                  maxWidth: isMobile ? double.infinity : UIConstants.dialogWidthLarge,
                 ),
                 child: ListView.builder(
-                  padding: EdgeInsets.all(isMobile ? 16 : 24),
+                  padding: EdgeInsets.all(
+                    isMobile ? 16 : 24,
+                  ),
                   itemCount: _sessions.length,
                   itemBuilder: (context, index) {
                 final session = _sessions[index];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../../../core/constants/ui_constants.dart';
 import '../../domain/entities/session.dart';
 
 class ManualEntryForm extends StatefulWidget {
@@ -463,7 +464,7 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
           const SizedBox(height: 16),
           LayoutBuilder(
             builder: (context, constraints) {
-              if (constraints.maxWidth < 400) {
+              if (constraints.maxWidth < UIConstants.breakpointXSmall) {
                 return Column(
                   children: [
                     ShadInputFormField(
