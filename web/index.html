@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -18,21 +19,116 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="App to log and track table tennis progress">
 
-  <!-- iOS meta tags & icons -->
+  <!-- PWA meta tags -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ttrack">
+  <meta name="application-name" content="TTrack">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TTrack">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
 
-  <title>ttrack</title>
+  <title>TTrack - Table Tennis Tracker</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+    }
+
+    /* Loading indicator */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0a0a0a;
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    // Hide loading indicator when Flutter is ready
+    window.addEventListener('flutter-first-frame', function () {
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.display = 'none';
+      }
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
+
+  <!-- PWA Install Prompt Handler -->
+  <script src="pwa-install-prompt.js" defer></script>
+
+  <script>
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('flutter_service_worker.js', {
+          scope: '/'
+        }).then(function (registration) {
+          console.log('ServiceWorker registration successful');
+
+          // Check for updates periodically
+          setInterval(function () {
+            registration.update();
+          }, 60000); // Check every minute
+
+        }).catch(function (error) {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+
+      // Handle service worker updates
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+  </script>
 </body>
+
 </html>
