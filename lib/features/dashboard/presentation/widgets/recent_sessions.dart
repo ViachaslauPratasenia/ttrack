@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/dialog_utils.dart';
 import '../../../sessions/domain/entities/session.dart';
 import '../../../sessions/presentation/widgets/session_detail_dialog.dart';
 
@@ -212,7 +213,7 @@ class RecentSessions extends StatelessWidget {
   }
 
   void _showSessionDetail(BuildContext context, Session session) {
-    showShadDialog(
+    DialogUtils.showAdaptiveDialog(
       context: context,
       builder: (context) => SessionDetailDialog(
         session: session,

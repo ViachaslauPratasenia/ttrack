@@ -1,8 +1,8 @@
 enum EquipmentCondition {
-  brandNew,      // Новое
-  lightlyUsed,   // Слегка б/у (10-30% износа)
+  brandNew, // Новое
+  lightlyUsed, // Слегка б/у (10-30% износа)
   moderatelyUsed, // Средне б/у (30-60% износа)
-  heavilyUsed,   // Сильно б/у (60-90% износа)
+  heavilyUsed, // Сильно б/у (60-90% износа)
 }
 
 extension EquipmentConditionExtension on EquipmentCondition {
@@ -69,10 +69,7 @@ class Blade {
   }
 }
 
-enum RubberSide {
-  forehand,
-  backhand,
-}
+enum RubberSide { forehand, backhand }
 
 extension RubberSideExtension on RubberSide {
   String get displayName {
@@ -183,8 +180,7 @@ class PaddleSetup {
 
   // Нужна ли замена хотя бы одной накладки
   bool get needsRubberReplacement {
-    return forehandRubber.wearPercentage >= 80 || 
-           backhandRubber.wearPercentage >= 80;
+    return forehandRubber.wearPercentage >= 80 || backhandRubber.wearPercentage >= 80;
   }
 
   // Ближайшая накладка, которую нужно заменить
@@ -216,5 +212,3 @@ class PaddleSetup {
     );
   }
 }
-
-

@@ -167,10 +167,166 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
 
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Header
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.muted.withOpacity(0.05),
+            border: Border(
+              bottom: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    LucideIcons.target,
+                    size: 22,
+                    color: theme.colorScheme.mutedForeground,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    widget.paddleSetup == null 
+                      ? 'Добавить ракетку' 
+                      : 'Редактировать ракетку',
+                    style: theme.textTheme.h3.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: isMobile ? 18 : 20,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(LucideIcons.x, size: 20),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        ),
+
+        // Form
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Setup Name
+                  _buildSectionTitle(theme, 'Название ракетки'),
+                  const SizedBox(height: 8),
+                  _buildTextField(
+                    controller: _setupNameController,
+                    label: 'Название',
+                    hint: 'Например: Основная ракетка',
+                    required: true,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Blade Section
+                  _buildSectionTitle(theme, 'Основание'),
+                  const SizedBox(height: 8),
+                  _buildTextField(
+                    controller: _bladeNameController,
+                    label: 'Название',
+                    hint: 'Например: Butterfly Viscaria',
+                    required: true,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildConditionSelector(
+                    'Состояние',
+                    _bladeCondition,
+                    (value) => setState(() => _bladeCondition = value),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Forehand Rubber Section
+                  _buildSectionTitle(theme, 'Накладка форхенда'),
+                  const SizedBox(height: 8),
+                  _buildRubberSection(
+                    nameController: _fhRubberNameController,
+                    condition: _fhRubberCondition,
+                    onConditionChanged: (value) => setState(() => _fhRubberCondition = value),
+                    lifespanController: _fhLifespanController,
+                    usedHoursController: _fhUsedHoursController,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Backhand Rubber Section
+                  _buildSectionTitle(theme, 'Накладка бэкхенда'),
+                  const SizedBox(height: 8),
+                  _buildRubberSection(
+                    nameController: _bhRubberNameController,
+                    condition: _bhRubberCondition,
+                    onConditionChanged: (value) => setState(() => _bhRubberCondition = value),
+                    lifespanController: _bhLifespanController,
+                    usedHoursController: _bhUsedHoursController,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Footer
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.muted.withOpacity(0.05),
+            border: Border(
+              top: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(LucideIcons.x, size: 16),
+                    SizedBox(width: 6),
+                    Text('Отмена'),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              ShadButton(
+                onPressed: _handleSave,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(LucideIcons.check, size: 16),
+                    SizedBox(width: 6),
+                    Text('Сохранить'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    // Full-screen for mobile, dialog for desktop
+    if (isMobile) {
+      return Scaffold(
+        backgroundColor: AppColors.dialogBackground,
+        body: SafeArea(child: content),
+      );
+    }
+
     return Dialog(
       backgroundColor: AppColors.background.withOpacity(0.8),
       child: Container(
-        width: isMobile ? double.infinity : 600,
+        width: 600,
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.9,
         ),
@@ -189,153 +345,7 @@ class _AddEquipmentDialogState extends State<AddEquipmentDialog> {
           ],
         ),
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.muted.withOpacity(0.05),
-                border: Border(
-                  bottom: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        LucideIcons.target,
-                        size: 22,
-                        color: theme.colorScheme.mutedForeground,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        widget.paddleSetup == null 
-                          ? 'Добавить ракетку' 
-                          : 'Редактировать ракетку',
-                        style: theme.textTheme.h3.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: isMobile ? 18 : 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-            ),
-
-            // Form
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Setup Name
-                      _buildSectionTitle(theme, 'Название ракетки'),
-                      const SizedBox(height: 8),
-                      _buildTextField(
-                        controller: _setupNameController,
-                        label: 'Название',
-                        hint: 'Например: Основная ракетка',
-                        required: true,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Blade Section
-                      _buildSectionTitle(theme, 'Основание'),
-                      const SizedBox(height: 8),
-                      _buildTextField(
-                        controller: _bladeNameController,
-                        label: 'Название',
-                        hint: 'Например: Butterfly Viscaria',
-                        required: true,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildConditionSelector(
-                        'Состояние',
-                        _bladeCondition,
-                        (value) => setState(() => _bladeCondition = value),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Forehand Rubber Section
-                      _buildSectionTitle(theme, 'Накладка форхенда'),
-                      const SizedBox(height: 8),
-                      _buildRubberSection(
-                        nameController: _fhRubberNameController,
-                        condition: _fhRubberCondition,
-                        onConditionChanged: (value) => setState(() => _fhRubberCondition = value),
-                        lifespanController: _fhLifespanController,
-                        usedHoursController: _fhUsedHoursController,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Backhand Rubber Section
-                      _buildSectionTitle(theme, 'Накладка бэкхенда'),
-                      const SizedBox(height: 8),
-                      _buildRubberSection(
-                        nameController: _bhRubberNameController,
-                        condition: _bhRubberCondition,
-                        onConditionChanged: (value) => setState(() => _bhRubberCondition = value),
-                        lifespanController: _bhLifespanController,
-                        usedHoursController: _bhUsedHoursController,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // Footer
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.muted.withOpacity(0.05),
-                border: Border(
-                  top: BorderSide(color: theme.colorScheme.border.withOpacity(0.5)),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ShadButton.outline(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(LucideIcons.x, size: 16),
-                        SizedBox(width: 6),
-                        Text('Отмена'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  ShadButton(
-                    onPressed: _handleSave,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(LucideIcons.check, size: 16),
-                        SizedBox(width: 6),
-                        Text('Сохранить'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        child: content,
       ),
     );
   }

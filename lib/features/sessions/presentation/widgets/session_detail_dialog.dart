@@ -77,23 +77,12 @@ class SessionDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
     final isSmallScreen = screenWidth < 600;
 
-    return ShadDialog(
-      title: const SizedBox.shrink(),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isSmallScreen ? double.infinity : 600,
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.dialogBackground,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
             // Custom header with gradient background
             Container(
               padding: const EdgeInsets.all(24),
@@ -423,8 +412,30 @@ class SessionDetailDialog extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+      ],
+    );
+
+    // Full-screen for mobile, dialog for desktop
+    if (isMobile) {
+      return Scaffold(
+        backgroundColor: AppColors.dialogBackground,
+        body: SafeArea(child: content),
+      );
+    }
+
+    return ShadDialog(
+      title: const SizedBox.shrink(),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: 600,
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
+        decoration: BoxDecoration(
+          color: AppColors.dialogBackground,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: content,
       ),
     );
   }

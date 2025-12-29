@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../../../core/utils/dialog_utils.dart';
 import '../../domain/entities/session.dart';
 import '../widgets/session_detail_dialog.dart';
 
@@ -87,7 +88,7 @@ class _SessionsListPageState extends State<SessionsListPage> {
   }
 
   void _showSessionDetail(Session session, int index) {
-    showDialog(
+    DialogUtils.showAdaptiveDialog(
       context: context,
       builder: (context) => SessionDetailDialog(
         session: session,

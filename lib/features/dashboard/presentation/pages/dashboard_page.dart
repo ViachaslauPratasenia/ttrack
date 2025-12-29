@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/dialog_utils.dart';
 import '../widgets/app_sidebar.dart';
 import '../widgets/stats_cards.dart';
 import '../widgets/badges_section.dart';
@@ -28,7 +29,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _showAddEquipmentDialog() {
-    showDialog(
+    DialogUtils.showAdaptiveDialog(
       context: context,
       builder: (context) => AddEquipmentDialog(
         paddleSetup: _currentPaddleSetup,
