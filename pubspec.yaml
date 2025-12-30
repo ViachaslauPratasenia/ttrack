@@ -38,6 +38,8 @@ dependencies:
   # Shadcn UI for Flutter - modern UI components
   shadcn_ui: ^0.39.3
 
+  firebase_core: ^4.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
