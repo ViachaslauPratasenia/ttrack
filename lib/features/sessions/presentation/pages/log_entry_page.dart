@@ -21,10 +21,10 @@ class _LogEntryPageState extends State<LogEntryPage> {
     // TODO: Send to backend API
     debugPrint('Session saved: ${session.type} at ${session.location}');
     debugPrint('Duration: ${session.duration}');
-    if (session.type == SessionType.practice) {
-      debugPrint('Ratings: T:${session.technicalRating}, '
-          'Tac:${session.tacticalRating}, M:${session.mentalRating}');
-    } else if (session.type == SessionType.match) {
+    if (session.notes != null && session.notes!.isNotEmpty) {
+      debugPrint('Notes: ${session.notes}');
+    }
+    if (session.type == SessionType.match) {
       debugPrint('Score: ${session.playerScore} - ${session.opponentScore}');
       debugPrint('Opponent: ${session.opponentName} (${session.opponentLevel})');
     } else if (session.type == SessionType.gearTest) {

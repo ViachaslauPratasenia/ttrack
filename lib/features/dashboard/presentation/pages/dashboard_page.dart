@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/ui_constants.dart';
 import '../../../../core/utils/dialog_utils.dart';
-import '../widgets/app_sidebar.dart';
 import '../widgets/stats_cards.dart';
 import '../widgets/badges_section.dart';
 import '../widgets/performance_chart.dart';
@@ -53,169 +51,163 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      drawer: isMobile ? Drawer(child: const AppSidebar(currentRoute: '/dashboard')) : null,
-      body: Row(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/log-entry');
+        },
+        backgroundColor: theme.colorScheme.primary,
+        child: Icon(LucideIcons.plus, color: theme.colorScheme.primaryForeground),
+      ),
+      body: Column(
         children: [
-          // Sidebar (hidden on mobile)
-          if (!isMobile) const AppSidebar(currentRoute: '/dashboard'),
-
-          // Main content
-          Expanded(
-            child: Column(
+          // Top bar
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 16 : 24,
+              vertical: 16,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.card,
+              border: Border(bottom: BorderSide(color: theme.colorScheme.border, width: 1)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Top bar
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 16 : 24,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.card,
-                    border: Border(bottom: BorderSide(color: theme.colorScheme.border, width: 1)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          if (isMobile)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: IconButton(
-                                icon: const Icon(LucideIcons.menu, size: 22),
-                                onPressed: () {
-                                  Scaffold.of(context).openDrawer();
-                                },
-                              ),
-                            ),
-                          Text(
-                            'Dashboard',
-                            style: theme.textTheme.h2.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          if (!isMobile)
-                            IconButton(
-                              icon: const Icon(LucideIcons.search, size: 20),
-                              onPressed: () {
-                                // TODO: Search
-                              },
-                            ),
-                          IconButton(
-                            icon: const Icon(LucideIcons.sun, size: 20),
-                            onPressed: () {
-                              // TODO: Toggle theme
-                            },
-                          ),
-                          if (!isMobile) const SizedBox(width: 8),
-                          CircleAvatar(
-                            backgroundColor: theme.colorScheme.primary,
-                            radius: isMobile ? 16 : 18,
-                            child: Text(
-                              'V',
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: isMobile ? 12 : 14,
-                              ),
-                            ),
-                          ),
-                          if (!isMobile) ...[
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Viachaslau',
-                                  style: theme.textTheme.small.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  'Logout',
-                                  style: theme.textTheme.small.copyWith(
-                                    color: theme.colorScheme.mutedForeground,
-                                  ),
-                                ),
-                              ],
-                            ),
+                Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary,
+                            theme.colorScheme.primary.withOpacity(0.8),
                           ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-
-                // Scrollable content
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(
-                      isMobile ? 16 : 24,
+                      child: Icon(
+                        LucideIcons.disc,
+                        color: theme.colorScheme.primaryForeground,
+                        size: 20,
+                      ),
                     ),
-                    child: Column(
+                    const SizedBox(width: 12),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Stats cards
-                        const StatsCards(),
-                        const SizedBox(height: 24),
-
-                        // Badges in one row
-                        const BadgesSection(),
-                        const SizedBox(height: 24),
-
-                        // Equipment Status and Performance Chart row (responsive)
-                        if (isMobile || isTablet)
-                          Column(
-                            children: [
-                              EquipmentStatusCard(
-                                paddleSetup: _currentPaddleSetup,
-                                onAddEquipment: _showAddEquipmentDialog,
-                                onEditEquipment: _showAddEquipmentDialog,
-                              ),
-                              const SizedBox(height: 24),
-                              const PerformanceChart(),
-                            ],
-                          )
-                        else
-                          SizedBox(
-                            height: UIConstants.equipmentCardHeight,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: EquipmentStatusCard(
-                                    paddleSetup: _currentPaddleSetup,
-                                    onAddEquipment: _showAddEquipmentDialog,
-                                    onEditEquipment: _showAddEquipmentDialog,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                const Expanded(flex: 1, child: PerformanceChart()),
-                              ],
-                            ),
+                        Text(
+                          'Spin Track',
+                          style: theme.textTheme.h4.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                        const SizedBox(height: 24),
-
-                        // GPI
-                        const GearPerformanceIndex(),
-                        const SizedBox(height: 24),
-
-                        // Recent sessions
-                        const RecentSessions(),
-
-                        // Bottom padding for mobile
-                        if (isMobile) const SizedBox(height: 32 + 8),
+                        ),
+                        Text(
+                          'Table Tennis Tracker',
+                          style: theme.textTheme.small.copyWith(
+                            color: theme.colorScheme.mutedForeground,
+                            fontSize: 10,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(LucideIcons.history, size: 20),
+                      tooltip: 'History',
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/sessions-list');
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(LucideIcons.activity, size: 20),
+                      tooltip: 'Analytics',
+                      onPressed: () {
+                        // TODO: Navigate to analytics
+                      },
+                    ),
+                  ],
                 ),
               ],
+            ),
+          ),
+
+          // Scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(
+                isMobile ? 16 : 24,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Stats cards
+                  const StatsCards(),
+                  const SizedBox(height: 24),
+
+                  // Badges in one row
+                  const BadgesSection(),
+                  const SizedBox(height: 24),
+
+                  // Equipment Status and Performance Chart row (responsive)
+                  if (isMobile || isTablet)
+                    Column(
+                      children: [
+                        EquipmentStatusCard(
+                          paddleSetup: _currentPaddleSetup,
+                          onAddEquipment: _showAddEquipmentDialog,
+                          onEditEquipment: _showAddEquipmentDialog,
+                        ),
+                        const SizedBox(height: 24),
+                        const PerformanceChart(),
+                      ],
+                    )
+                  else
+                    SizedBox(
+                      height: UIConstants.equipmentCardHeight,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: EquipmentStatusCard(
+                              paddleSetup: _currentPaddleSetup,
+                              onAddEquipment: _showAddEquipmentDialog,
+                              onEditEquipment: _showAddEquipmentDialog,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          const Expanded(flex: 1, child: PerformanceChart()),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 24),
+
+                  // GPI
+                  const GearPerformanceIndex(),
+                  const SizedBox(height: 24),
+
+                  // Recent sessions
+                  const RecentSessions(),
+
+                  // Bottom padding for mobile
+                  if (isMobile) const SizedBox(height: 32 + 8),
+                ],
+              ),
             ),
           ),
         ],

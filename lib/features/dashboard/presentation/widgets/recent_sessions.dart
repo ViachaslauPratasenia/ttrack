@@ -168,8 +168,7 @@ class RecentSessions extends StatelessWidget {
         0: FixedColumnWidth(50),
         1: FlexColumnWidth(1.5),
         2: FlexColumnWidth(1),
-        3: FlexColumnWidth(2.5),
-        4: FixedColumnWidth(80),
+        3: FixedColumnWidth(80),
       },
       border: TableBorder(
         horizontalInside: BorderSide(color: theme.colorScheme.border.withOpacity(0.3), width: 1),
@@ -185,7 +184,6 @@ class RecentSessions extends StatelessWidget {
             _TableHeader(theme: theme, text: ''),
             _TableHeader(theme: theme, text: 'Date'),
             _TableHeader(theme: theme, text: 'Duration'),
-            _TableHeader(theme: theme, text: 'Location'),
             _TableHeader(theme: theme, text: ''),
           ],
         ),
@@ -197,7 +195,6 @@ class RecentSessions extends StatelessWidget {
               _SessionTypeIcon(session: session, theme: theme),
               _TableCell(theme: theme, text: _formatDate(session.startTime)),
               _TableCell(theme: theme, text: _formatDuration(session.duration)),
-              _TableCell(theme: theme, text: session.location, maxLines: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                 child: ShadButton.outline(
@@ -270,6 +267,17 @@ class _SessionCard extends StatelessWidget {
     }
   }
 
+  String _getSessionTypeLabel(SessionType type) {
+    switch (type) {
+      case SessionType.practice:
+        return 'Тренировка';
+      case SessionType.match:
+        return 'Матч';
+      case SessionType.gearTest:
+        return 'Тест экипировки';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = _getSessionColor(session.type);
@@ -303,7 +311,7 @@ class _SessionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        session.location,
+                        _getSessionTypeLabel(session.type),
                         style: theme.textTheme.p.copyWith(fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -411,9 +419,8 @@ class _TableHeader extends StatelessWidget {
 class _TableCell extends StatelessWidget {
   final ShadThemeData theme;
   final String text;
-  final int maxLines;
 
-  const _TableCell({required this.theme, required this.text, this.maxLines = 1});
+  const _TableCell({required this.theme, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +429,7 @@ class _TableCell extends StatelessWidget {
       child: Text(
         text,
         style: theme.textTheme.p.copyWith(fontSize: 14),
-        maxLines: maxLines,
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
     );

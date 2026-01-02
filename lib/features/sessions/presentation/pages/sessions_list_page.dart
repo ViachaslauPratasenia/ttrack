@@ -181,6 +181,22 @@ class _SessionsListPageState extends State<SessionsListPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(LucideIcons.activity, size: 20),
+            tooltip: 'Analytics',
+            onPressed: () {
+              // TODO: Navigate to analytics
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/log-entry');
+        },
+        backgroundColor: theme.colorScheme.primary,
+        child: Icon(LucideIcons.plus, color: theme.colorScheme.primaryForeground),
       ),
       body: _sessions.isEmpty
           ? Center(
@@ -270,29 +286,31 @@ class _SessionsListPageState extends State<SessionsListPage> {
                               ],
                             ),
                             
-                            const SizedBox(height: 12),
-                            
-                            // Location
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  LucideIcons.mapPin,
-                                  size: 14,
-                                  color: theme.colorScheme.mutedForeground,
-                                ),
-                                const SizedBox(width: 4),
-                                Flexible(
-                                  child: Text(
-                                    session.location,
-                                    style: theme.textTheme.small.copyWith(
-                                      color: theme.colorScheme.mutedForeground,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
+                            if (session.location.isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              
+                              // Location
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    LucideIcons.mapPin,
+                                    size: 14,
+                                    color: theme.colorScheme.mutedForeground,
                                   ),
-                                ),
-                              ],
-                            ),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      session.location,
+                                      style: theme.textTheme.small.copyWith(
+                                        color: theme.colorScheme.mutedForeground,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
 
                             // Type-specific info
                             if (session.type == SessionType.match) ...[

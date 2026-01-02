@@ -18,17 +18,14 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
   SessionType _sessionType = SessionType.practice;
 
   // Common fields
-  String _location = '';
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
-  String _notes = '';
+  String _whatWentWell = '';
+  String _whatDidNotWork = '';
+  String _whatToImprove = '';
+  String _additionalNotes = '';
   String? _selectedPaddleSetup;
-
-  // Practice fields
-  double _technicalRating = 5.0;
-  double _tacticalRating = 5.0;
-  double _mentalRating = 5.0;
 
   // Match fields
   String _opponentName = '';
@@ -36,12 +33,7 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
   int? _opponentScore;
   OpponentLevel _opponentLevel = OpponentLevel.similar;
 
-  // Gear Test fields
-  double _sgc = 50.0;
-  double _spn = 50.0;
-  double _pwr = 50.0;
-  double _stb = 50.0;
-  double _sns = 50.0;
+  // Gear Test fields - using same text fields as practice
 
   Future<void> _selectDate() async {
     final date = await showDatePicker(
@@ -120,26 +112,38 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
       return;
     }
 
+    // Combine text fields into notes
+    final List<String> notesParts = [];
+    if (_whatWentWell.isNotEmpty) {
+      final label = _sessionType == SessionType.gearTest ? 'Что понравилось' : 'Что получалось';
+      notesParts.add('$label:\n$_whatWentWell');
+    }
+    if (_whatDidNotWork.isNotEmpty) {
+      final label = _sessionType == SessionType.gearTest
+          ? 'Что не понравилось'
+          : 'Что не получалось';
+      notesParts.add('$label:\n$_whatDidNotWork');
+    }
+    if (_whatToImprove.isNotEmpty && _sessionType == SessionType.practice) {
+      notesParts.add('Что нужно улучшить:\n$_whatToImprove');
+    }
+    if (_additionalNotes.isNotEmpty) {
+      notesParts.add('Дополнительно:\n$_additionalNotes');
+    }
+    final combinedNotes = notesParts.isEmpty ? null : notesParts.join('\n\n');
+
     final session = Session(
       type: _sessionType,
-      location: _location,
+      location: '', // Location removed for now
       startTime: startDateTime,
       endTime: endDateTime,
       duration: duration,
-      notes: _notes.isEmpty ? null : _notes,
+      notes: combinedNotes,
       paddleSetupId: _selectedPaddleSetup,
-      technicalRating: _sessionType == SessionType.practice ? _technicalRating.round() : null,
-      tacticalRating: _sessionType == SessionType.practice ? _tacticalRating.round() : null,
-      mentalRating: _sessionType == SessionType.practice ? _mentalRating.round() : null,
       playerScore: _sessionType == SessionType.match ? _playerScore : null,
       opponentName: _sessionType == SessionType.match ? _opponentName : null,
       opponentScore: _sessionType == SessionType.match ? _opponentScore : null,
       opponentLevel: _sessionType == SessionType.match ? _opponentLevel : null,
-      sgc: _sessionType == SessionType.gearTest ? _sgc.round() : null,
-      spn: _sessionType == SessionType.gearTest ? _spn.round() : null,
-      pwr: _sessionType == SessionType.gearTest ? _pwr.round() : null,
-      stb: _sessionType == SessionType.gearTest ? _stb.round() : null,
-      sns: _sessionType == SessionType.gearTest ? _sns.round() : null,
     );
 
     widget.onSessionSaved(session);
@@ -148,23 +152,17 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
 
     // Clear form
     setState(() {
-      _location = '';
       _selectedDate = DateTime.now();
       _startTime = TimeOfDay.now();
       _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
-      _notes = '';
+      _whatWentWell = '';
+      _whatDidNotWork = '';
+      _whatToImprove = '';
+      _additionalNotes = '';
       _selectedPaddleSetup = null;
       _opponentName = '';
       _playerScore = null;
       _opponentScore = null;
-      _technicalRating = 5.0;
-      _tacticalRating = 5.0;
-      _mentalRating = 5.0;
-      _sgc = 50.0;
-      _spn = 50.0;
-      _pwr = 50.0;
-      _stb = 50.0;
-      _sns = 50.0;
     });
   }
 
@@ -249,21 +247,6 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
 
           const SizedBox(height: 16),
 
-          // Location
-          ShadInputFormField(
-            id: 'location',
-            label: const Text('Локация'),
-            placeholder: const Text('Введите место тренировки'),
-            initialValue: _location,
-            onChanged: (value) => _location = value,
-            validator: (value) {
-              if (value.isEmpty) return 'Введите локацию';
-              return null;
-            },
-          ),
-
-          const SizedBox(height: 16),
-
           // Date
           _buildDateTimeField(
             label: 'Дата',
@@ -303,12 +286,7 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
           const SizedBox(height: 24),
 
           // Type-specific fields
-          if (_sessionType == SessionType.practice)
-            _buildPracticeFields()
-          else if (_sessionType == SessionType.match)
-            _buildMatchFields()
-          else if (_sessionType == SessionType.gearTest)
-            _buildGearTestFields(),
+          if (_sessionType == SessionType.match) _buildMatchFields(),
 
           const SizedBox(height: 24),
 
@@ -339,14 +317,64 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
 
           const SizedBox(height: 16),
 
-          // Notes
+          // Text fields for training/gear test notes
           ShadInputFormField(
-            id: 'notes',
-            label: const Text('Заметки'),
-            placeholder: const Text('Добавьте заметки (опционально)'),
-            maxLines: 3,
-            initialValue: _notes,
-            onChanged: (value) => _notes = value,
+            id: 'what_went_well',
+            label: Text(
+              _sessionType == SessionType.gearTest ? 'Что понравилось' : 'Что получалось',
+            ),
+            placeholder: Text(
+              _sessionType == SessionType.gearTest
+                  ? 'Опишите, что понравилось в экипировке (опционально)'
+                  : 'Опишите, что получалось хорошо (опционально)',
+            ),
+            maxLines: 4,
+            initialValue: _whatWentWell,
+            onChanged: (value) => _whatWentWell = value,
+          ),
+
+          const SizedBox(height: 16),
+
+          ShadInputFormField(
+            id: 'what_did_not_work',
+            label: Text(
+              _sessionType == SessionType.gearTest ? 'Что не понравилось' : 'Что не получалось',
+            ),
+            placeholder: Text(
+              _sessionType == SessionType.gearTest
+                  ? 'Опишите, что не понравилось в экипировке (опционально)'
+                  : 'Опишите, что не получалось (опционально)',
+            ),
+            maxLines: 4,
+            initialValue: _whatDidNotWork,
+            onChanged: (value) => _whatDidNotWork = value,
+          ),
+
+          const SizedBox(height: 16),
+
+          if (_sessionType == SessionType.practice) ...[
+            ShadInputFormField(
+              id: 'what_to_improve',
+              label: const Text('Что нужно улучшить'),
+              placeholder: const Text('Опишите, что нужно улучшить (опционально)'),
+              maxLines: 4,
+              initialValue: _whatToImprove,
+              onChanged: (value) => _whatToImprove = value,
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          ShadInputFormField(
+            id: 'additional_notes',
+            label: const Text('Дополнительные заметки'),
+            placeholder: Text(
+              _sessionType == SessionType.gearTest
+                  ? 'Любые дополнительные заметки об экипировке (опционально)'
+                  : 'Любые дополнительные заметки (опционально)',
+            ),
+            maxLines: 4,
+            initialValue: _additionalNotes,
+            onChanged: (value) => _additionalNotes = value,
           ),
 
           const SizedBox(height: 32),
@@ -410,37 +438,6 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPracticeFields() {
-    return ShadCard(
-      title: const Text('Оценки (1-10)'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildRatingSlider(
-            label: 'Техника',
-            icon: LucideIcons.lightbulb,
-            value: _technicalRating,
-            onChanged: (value) => setState(() => _technicalRating = value),
-          ),
-          const SizedBox(height: 16),
-          _buildRatingSlider(
-            label: 'Тактика',
-            icon: LucideIcons.brain,
-            value: _tacticalRating,
-            onChanged: (value) => setState(() => _tacticalRating = value),
-          ),
-          const SizedBox(height: 16),
-          _buildRatingSlider(
-            label: 'Ментальность',
-            icon: LucideIcons.heart,
-            value: _mentalRating,
-            onChanged: (value) => setState(() => _mentalRating = value),
-          ),
-        ],
-      ),
     );
   }
 
@@ -556,78 +553,6 @@ class _ManualEntryFormState extends State<ManualEntryForm> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildGearTestFields() {
-    return ShadCard(
-      title: const Text('KPI показатели (0-100)'),
-      child: Column(
-        children: [
-          _buildKPISlider('Контроль короткой игры', _sgc, (v) => setState(() => _sgc = v)),
-          const SizedBox(height: 12),
-          _buildKPISlider('Потенциал вращения', _spn, (v) => setState(() => _spn = v)),
-          const SizedBox(height: 12),
-          _buildKPISlider('Мощность', _pwr, (v) => setState(() => _pwr = v)),
-          const SizedBox(height: 12),
-          _buildKPISlider('Стабильность', _stb, (v) => setState(() => _stb = v)),
-          const SizedBox(height: 12),
-          _buildKPISlider('Чувствительность', _sns, (v) => setState(() => _sns = v)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRatingSlider({
-    required String label,
-    required IconData icon,
-    required double value,
-    required Function(double) onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, size: 16),
-                const SizedBox(width: 8),
-                Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
-              ],
-            ),
-            ShadBadge(child: Text(value.round().toString())),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ShadSlider(min: 1, max: 10, initialValue: value, onChanged: onChanged),
-      ],
-    );
-  }
-
-  Widget _buildKPISlider(String label, double value, Function(double) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Text(
-                label,
-                style: const TextStyle(fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 8),
-            ShadBadge(child: Text(value.round().toString())),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ShadSlider(min: 0, max: 100, initialValue: value, onChanged: onChanged),
-      ],
     );
   }
 }
